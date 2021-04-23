@@ -1,4 +1,7 @@
 ## 新改动
+### 2021.4.23
+1. 由于冰蝎的更新,不再需要behinder-clone,使用Behinder_v3.0 Beta 10可以直接进行连接
+2. fix shellInject bug
 ### 2021.4.22
 1. 优化了内存webshell的逻辑,注入后的webshell访问路径和密码有关,为/md5(pass)[0:16],如密码为pass,则路径为/1a1dc91c907325c6,之前内存马注册路径存在bug,导致没有注册到第一filter
 2. 更新了CommonsBeanutils1,参考[CommonsBeanutils与无commons-collections的Shiro反序列化利用](https://www.leavesongs.com/PENETRATION/commons-beanutils-without-commons-collections.html)
